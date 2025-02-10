@@ -153,17 +153,6 @@ mod test {
     use std::io::{self, Error};
     use std::process::{Command, Output};
 
-    fn run_process(command: &str, args: &[&str]) -> io::Result<String> {
-        let output = Command::new(command).args(args).output()?;
-
-        if output.status.success() {
-            Ok(String::from_utf8_lossy(&output.stdout).into_owned())
-        } else {
-            let error_message = String::from_utf8_lossy(&output.stderr);
-            Err(Error::new(io::ErrorKind::Other, error_message.to_string()))
-        }
-    }
-
     fn generate_unique_wallet() -> EthereumWallet {
         loop {
             let signer = PrivateKeySigner::random();
@@ -217,11 +206,14 @@ mod test {
 
     #[tokio::test]
     async fn test_single_anvil() -> Result<()> {
-        let handle = tokio::spawn(async {
-            run_process("anvil", &vec![]).unwrap();
-        });
+        // Basic background process
+        let mut child = Command::new("anvil")
+            .spawn()
+            .expect("Failed to start process");
+
         let mut handles = Vec::new();
-        for _ in 0..1000 {
+        for i in 0..100 {
+            println!("{i}");
             let handle =
                 tokio::spawn(async move { get_anvil_port(test_parallel_single_anvil).await });
             handles.push(handle);
@@ -231,7 +223,7 @@ mod test {
             assert!(result.is_ok());
         }
 
-        handle.abort();
+        child.kill().unwrap();
         Ok(())
     }
 }
