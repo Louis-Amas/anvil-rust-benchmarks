@@ -109,17 +109,17 @@ async fn deploy_and_interact_2(port: u16, wallet: EthereumWallet) -> Result<()> 
     Ok(())
 }
 
-fn main() {}
-
 #[cfg(test)]
 mod test {
     use super::*;
+    use alloy::primitives::Address;
     use alloy::signers::local::PrivateKeySigner;
     use futures::future::join_all;
     use futures::Future;
     use once_cell::sync::Lazy;
     use parking_lot::RwLock;
     use std::collections::HashSet;
+    use std::process::Command;
     use std::sync::Mutex;
     use std::time::Duration;
 
@@ -149,8 +149,6 @@ mod test {
     // }
 
     static USED_ADDRESSES: Lazy<Mutex<HashSet<Address>>> = Lazy::new(|| Mutex::new(HashSet::new()));
-
-    use std::process::Command;
 
     fn generate_unique_wallet() -> EthereumWallet {
         loop {
