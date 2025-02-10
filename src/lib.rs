@@ -2,7 +2,6 @@ use std::str::FromStr;
 
 use alloy::{
     network::{Ethereum, EthereumWallet, NetworkWallet, ReceiptResponse, TransactionBuilder},
-    node_bindings::AnvilInstance,
     primitives::U256,
     providers::{ext::AnvilApi, Provider, ProviderBuilder},
     rpc::types::TransactionRequest,
