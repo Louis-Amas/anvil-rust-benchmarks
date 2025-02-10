@@ -3,7 +3,7 @@ use std::str::FromStr;
 use alloy::{
     network::{Ethereum, EthereumWallet, NetworkWallet, ReceiptResponse, TransactionBuilder},
     node_bindings::AnvilInstance,
-    primitives::{Address, U256},
+    primitives::U256,
     providers::{ext::AnvilApi, Provider, ProviderBuilder},
     rpc::types::TransactionRequest,
     sol,
@@ -114,12 +114,12 @@ fn main() {}
 #[cfg(test)]
 mod test {
     use super::*;
-    use alloy::{node_bindings::Anvil, signers::local::PrivateKeySigner};
+    use alloy::signers::local::PrivateKeySigner;
     use futures::future::join_all;
     use futures::Future;
     use once_cell::sync::Lazy;
     use parking_lot::RwLock;
-    use std::collections::{HashMap, HashSet};
+    use std::collections::HashSet;
     use std::sync::Mutex;
     use std::time::Duration;
 
@@ -150,8 +150,7 @@ mod test {
 
     static USED_ADDRESSES: Lazy<Mutex<HashSet<Address>>> = Lazy::new(|| Mutex::new(HashSet::new()));
 
-    use std::io::{self, Error};
-    use std::process::{Command, Output};
+    use std::process::Command;
 
     fn generate_unique_wallet() -> EthereumWallet {
         loop {
@@ -212,7 +211,7 @@ mod test {
             .expect("Failed to start process");
 
         let mut handles = Vec::new();
-        for i in 0..100 {
+        for i in 0..1000 {
             println!("{i}");
             let handle =
                 tokio::spawn(async move { get_anvil_port(test_parallel_single_anvil).await });
